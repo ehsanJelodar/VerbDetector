@@ -179,6 +179,9 @@ function getRegularVerbForms(input) {
 }
 
 function getVerbIngForm(input) {
+
+  if(input == "do"  || input == "go" || input == "be")//exception
+    return input + "ing";
     if(input.length < 3)//opt
     return input;
   const vowels = ['a', 'e', 'i', 'o', 'u'];
@@ -213,6 +216,12 @@ function getVerbIngForm(input) {
 }
 
 function getVerbThirdPersonPresent(input) {
+  if(input == "do"  || input == "go")//exception
+    return input + "es";
+   if(input == "be")//exception
+   {
+     return "is/are";
+   }
   if(input.length < 3)//opt
     return input;
   const esEndings = ['s', 'ss', 'sh', 'ch', 'x', 'z'];
