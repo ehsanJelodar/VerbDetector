@@ -137,33 +137,45 @@ function getRegularVerbForms(input) {
   if(input.length < 3)//opt
     return input;
 
+  let secondPart = '';
+  let firstPart = '';
+  const index_sp = input.indexOf(" ");
+  if (index_sp !== -1) {
+  firstPart = input.substring(0, index_sp);
+  secondPart = " " + input.substring(index_sp + 1);
+  }
+  else
+  {
+    firstPart = input;
+  }
+
   const vowels = ['a', 'e', 'i', 'o', 'u'];
-  const lastChar = input[input.length - 1];
-  const secondLastChar = input[input.length - 2];
-  const thirdLast = input[input.length - 3];//or input.at(-3)
+  const lastChar = firstPart[firstPart.length - 1];
+  const secondLastChar = firstPart[firstPart.length - 2];
+  const thirdLast = firstPart[firstPart.length - 3];//or firstPart.at(-3)
 
 
   // Rule 1: Ends in -e ➝ add 'd'
   if (lastChar === 'e') {
-    return input + 'd';//[input, input + 'd', input + 'd']; // V1, V2, V3
+    return firstPart + 'd' + secondPart;//[firstPart, firstPart + 'd', firstPart + 'd']; // V1, V2, V3
   }
 
 
   // Rule 2: Ends in consonant + 'y' ➝ change 'y' to 'i' + 'ed'
   if (lastChar === 'y' && !vowels.includes(secondLastChar)) {
-    let root = input.slice(0, -1);
-    return root + 'ied'; //[input, root + 'ied', root + 'ied'];
+    let root = firstPart.slice(0, -1);
+    return root + 'ied' + secondPart; //[firstPart, root + 'ied', root + 'ied'];
   }
 
   // Rule 3: One-syllable CVC (consonant-vowel-consonant) Ends in CVC(not ending in w/x/y) ➝ double final consonant + 'ed'
   if (
-    //input.length === 3 && // crude way to guess one-syllable
+    //firstPart.length === 3 && // crude way to guess one-syllable
     !vowels.includes(lastChar) &&
     vowels.includes(secondLastChar) &&
     !vowels.includes(thirdLast) &&
     !['w', 'x', 'y'].includes(lastChar) // don't double w/x/y
   ) {
-    return input + lastChar + 'ed';//[input, input + lastChar + 'ed', input + lastChar + 'ed'];
+    return firstPart + lastChar + 'ed' + secondPart;//[firstPart, firstPart + lastChar + 'ed', firstPart + lastChar + 'ed'];
   }
 
   // Rule 4: Ends in vowel + w/x/y ➝ just add 'ed'
@@ -171,11 +183,11 @@ function getRegularVerbForms(input) {
     ['w', 'x', 'y'].includes(lastChar) &&
     vowels.includes(secondLastChar)
   ) {
-    return input + 'ed';//[input, input + 'ed', input + 'ed'];
+    return firstPart + 'ed' + secondPart;//[firstPart, firstPart + 'ed', firstPart + 'ed'];
   }
 
   // Default: add 'ed'
-  return input + 'ed';//[input, input + 'ed', input + 'ed'];
+  return firstPart + 'ed' + secondPart;//[firstPart, firstPart + 'ed', firstPart + 'ed'];
 }
 
 function getVerbIngForm(input) {
@@ -184,23 +196,36 @@ function getVerbIngForm(input) {
     return input + "ing";
     if(input.length < 3)//opt
     return input;
+
+  let secondPart = '';
+  let firstPart = '';
+  const index_sp = input.indexOf(" ");
+  if (index_sp !== -1) {
+  firstPart = input.substring(0, index_sp);
+  secondPart = " " + input.substring(index_sp + 1);
+  }
+  else
+  {
+    firstPart = input;
+  }
+  
   const vowels = ['a', 'e', 'i', 'o', 'u'];
 
   // If the verb ends in 'ie', change 'ie' to 'ying'
-  if (input.endsWith('ie')) {
-    return input.slice(0, -2) + 'ying';
+  if (firstPart.endsWith('ie')) {
+    return firstPart.slice(0, -2) + 'ying' + secondPart;
   }
 
   // If the verb ends in 'e' (but not 'ee'), drop the 'e' and add 'ing'
-  if (input.endsWith('e') && !input.endsWith('ee')) {
-    return input.slice(0, -1) + 'ing';
+  if (firstPart.endsWith('e') && !firstPart.endsWith('ee')) {
+    return firstPart.slice(0, -1) + 'ing' + secondPart;
   }
 
   // Check for CVC pattern at the end
-  const len = input.length;
-  const last = input[len - 1];
-  const secondLast = input[len - 2];
-  const thirdLast = input[len - 3];
+  const len = firstPart.length;
+  const last = firstPart[len - 1];
+  const secondLast = firstPart[len - 2];
+  const thirdLast = firstPart[len - 3];
 
   if (
     !vowels.includes(last) &&
@@ -208,11 +233,11 @@ function getVerbIngForm(input) {
     !vowels.includes(thirdLast) &&
     !['w', 'x', 'y'].includes(last)
   ) {
-    return input + last + 'ing'; // double final consonant
+    return firstPart + last + 'ing' + secondPart; // double final consonant
   }
 
   // Default: just add 'ing'
-  return input + 'ing';
+  return firstPart + 'ing' + secondPart;
 }
 
 function getVerbThirdPersonPresent(input) {
@@ -224,25 +249,38 @@ function getVerbThirdPersonPresent(input) {
    }
   if(input.length < 3)//opt
     return input;
+
+
+  let secondPart = '';
+  let firstPart = '';
+  const index_sp = input.indexOf(" ");
+  if (index_sp !== -1) {
+  firstPart = input.substring(0, index_sp);
+  secondPart = " " + input.substring(index_sp + 1);
+  }
+  else
+  {
+    firstPart = input;
+  }
   const esEndings = ['s', 'ss', 'sh', 'ch', 'x', 'z'];
   
   // Check if verb ends with any of the es endings
   for (let ending of esEndings) {
-    if (input.endsWith(ending)) {
-      return input + 'es';
+    if (firstPart.endsWith(ending)) {
+      return firstPart + 'es' + secondPart;
     }
   }
   
   // If verb ends with consonant + y, replace y with ies
-  if (input.endsWith('y') && !'aeiou'.includes(input[input.length - 2])) {
-    return input.slice(0, -1) + 'ies';
+  if (firstPart.endsWith('y') && !'aeiou'.includes(firstPart[firstPart.length - 2])) {
+    return firstPart.slice(0, -1) + 'ies' + secondPart;
   }
   
   // Default: just add s
-  return input + 's';
+  return firstPart + 's' + secondPart;
 }
 
-    function detectVerbForm() {
+function detectVerbForm() {
       const input = document.getElementById('verbInput').value.toLowerCase().trim();
       const v1Span = document.getElementById('v1');
       const v2Span = document.getElementById('v2');
